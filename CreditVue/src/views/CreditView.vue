@@ -7,17 +7,19 @@
           type="number"
           min="1"
           max="4000"
-          placeholder="moneyAmount amount"
+          placeholder="Money amount $"
+          id="moneyAmount"
           v-model="moneyAmount"
         />
         <input
           type="number"
           min="0"
           max="100"
+          id="percent_input"
           placeholder="Percent"
           v-model="percent"
         />
-        <select name="" id="" v-model="period">
+        <select name id="selection" v-model="period">
           <option value="undefined" disabled>Select Period</option>
           <option value="1">1 Month</option>
           <option value="2">2 Months</option>
@@ -36,21 +38,11 @@
       </div>
       <div id="printTable">
         <div id="attributes">
-          <div id="id">
-            Month
-          </div>
-          <div id="period">
-            Period
-          </div>
-          <div id="percent">
-            Percent per month
-          </div>
-          <div id="rest">
-            to Pay
-          </div>
-          <div id="toPay">
-            Rest
-          </div>
+          <div id="id">Month</div>
+          <div id="period">Period</div>
+          <div id="percent">Percent per month</div>
+          <div id="rest">Amount to pay</div>
+          <div id="toPay">Rest</div>
         </div>
         <div id="dataBaseData">
           <div id="id_dataBase"></div>
@@ -70,8 +62,8 @@ export default {
     return {
       dataBase: [],
       period: undefined,
-      moneyAmount: 0,
-      percent: 0,
+      moneyAmount: "",
+      percent: "",
       rest: 0,
       toPay: 0,
       id: 0,
@@ -79,18 +71,18 @@ export default {
     };
   },
   computed: {
-    
+
   },
   methods: {
     getRest() {
-        if (this.moneyAmountTemp % this.period == 0) {
-          return this.moneyAmountTemp / this.period;
-        } else {
-          return parseInt(this.moneyAmountTemp / this.period);
-        }
+      if (this.moneyAmountTemp % this.period == 0) {
+        return this.moneyAmountTemp / this.period;
+      } else {
+        return parseInt(this.moneyAmountTemp / this.period);
+      }
     },
     percentCalculation() {
-      return this.moneyAmountTemp =  (this.moneyAmount + (this.moneyAmount * (this.percent * 0.01)) * this.period).toFixed(2);
+      return this.moneyAmountTemp = (this.moneyAmount + (this.moneyAmount * (this.percent * 0.01)) * this.period).toFixed(2);
     },
     printCreditTable() {
       this.percentCalculation();
@@ -119,7 +111,6 @@ export default {
       for (let i = 0; i < this.period; i++) {
         this.id++;
         periodTemp--;
-        // this.period--;
         this.dataBase.push({
           id: this.id,
           period: this.period,
@@ -136,7 +127,7 @@ export default {
         );
         if (i == this.period - 1) {
           rest_dataBase.append(
-            (this.dataBase[i].rest = 
+            (this.dataBase[i].rest =
               this.getRest() +
               (this.moneyAmountTemp / this.period - this.getRest()) * this.period
             ).toFixed(2),
@@ -165,10 +156,22 @@ export default {
     align-items: center;
   }
 }
+#creditApp > h1 {
+  text-align: center;
+  padding: 14px;
+}
+#functional {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+#functional > input,
+#functional > button,
+#functional > select {
+  padding: 6px;
+}
 #printTable {
   display: grid;
   background: rgb(87, 87, 87);
-  margin-top: 4vh;
 }
 #attributes,
 #dataBaseData {
