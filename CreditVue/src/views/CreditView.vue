@@ -2,13 +2,13 @@
   <div class="credit">
     <div id="creditApp">
       <h1>Get ready to take a credit!</h1>
-      <div id="prelude">
+      <div id="functional">
         <input
           type="number"
           min="1"
           max="4000"
-          placeholder="Money amount"
-          v-model="money"
+          placeholder="moneyAmount amount"
+          v-model="moneyAmount"
         />
         <input
           type="number"
@@ -17,7 +17,7 @@
           placeholder="Percent"
           v-model="percent"
         />
-        <select name="" id="" v-model="time">
+        <select name="" id="" v-model="period">
           <option value="undefined" disabled>Select Period</option>
           <option value="1">1 Month</option>
           <option value="2">2 Months</option>
@@ -37,24 +37,24 @@
       <div id="printTable">
         <div id="attributes">
           <div id="id">
-            <div>Month</div>
+            Month
           </div>
-          <div id="time">
-            <div>Period</div>
+          <div id="period">
+            Period
           </div>
           <div id="percent">
-            <div>Percent</div>
+            Percent per month
           </div>
           <div id="rest">
-            <div>Rest</div>
+            to Pay
           </div>
           <div id="toPay">
-            <div>to Pay</div>
+            Rest
           </div>
         </div>
         <div id="dataBaseData">
           <div id="id_dataBase"></div>
-          <div id="time_dataBase"></div>
+          <div id="period_dataBase"></div>
           <div id="percent_dataBase"></div>
           <div id="rest_dataBase"></div>
           <div id="toPay_dataBase"></div>
@@ -65,78 +65,81 @@
 </template>
 
 <script>
-import { createElementBlock } from "@vue/runtime-core";
 export default {
   data() {
     return {
       dataBase: [],
-      time: undefined,
-      money: 0,
+      period: undefined,
+      moneyAmount: 0,
       percent: 0,
       rest: 0,
       toPay: 0,
       id: 0,
-      timeTemp: this.time,
+      moneyAmountTemp: this.moneyAmount,
     };
   },
-  computed: {},
+  computed: {
+    
+  },
   methods: {
     getRest() {
-      if (this.percent == 0) {
-        if (this.money % this.time == 0) {
-          return this.money / this.time;
+        if (this.moneyAmountTemp % this.period == 0) {
+          return this.moneyAmountTemp / this.period;
         } else {
-          return parseInt(this.money / this.time);
+          return parseInt(this.moneyAmountTemp / this.period);
         }
-      }
+    },
+    percentCalculation() {
+      return this.moneyAmountTemp =  (this.moneyAmount + (this.moneyAmount * (this.percent * 0.01)) * this.period).toFixed(2);
     },
     printCreditTable() {
+      this.percentCalculation();
       //   const id = document.getElementById("id");
-      //   const time = document.getElementById("time");
+      //   const period = document.getElementById("period");
       //   const percent = document.getElementById("percent");
       //   const rest = document.getElementById("rest");
 
       let id_dataBase = document.getElementById("id_dataBase");
-      let time_dataBase = document.getElementById("time_dataBase");
+      let period_dataBase = document.getElementById("period_dataBase");
       let percent_dataBase = document.getElementById("percent_dataBase");
       let rest_dataBase = document.getElementById("rest_dataBase");
       let toPay_dataBase = document.getElementById("toPay_dataBase");
       this.dataBase = [];
       id_dataBase.innerHTML = "";
-      time_dataBase.innerHTML = "";
+      period_dataBase.innerHTML = "";
       percent_dataBase.innerHTML = "";
       rest_dataBase.innerHTML = "";
       toPay_dataBase.innerHTML = "";
-      //   this.time = this.timeTemp;
+      //   this.period = this.periodTemp;
       this.id = 0;
-      //   this.time = 0;
-      this.toPay = this.money;
-      let periodTemp = this.time;
+      //   this.period = 0;
+      this.toPay = this.moneyAmountTemp;
+      let periodTemp = this.period;
       periodTemp++;
-      for (let i = 0; i < this.time; i++) {
+      for (let i = 0; i < this.period; i++) {
         this.id++;
         periodTemp--;
-        // this.time--;
+        // this.period--;
         this.dataBase.push({
           id: this.id,
-          time: this.time,
+          period: this.period,
           percent: this.percent,
           rest: this.getRest(),
           toPay: this.toPay,
         });
         console.log(this.dataBase);
         id_dataBase.append(this.dataBase[i].id, document.createElement("br"));
-        time_dataBase.append(periodTemp, document.createElement("br"));
+        period_dataBase.append(periodTemp, document.createElement("br"));
         percent_dataBase.append(
           this.dataBase[i].percent,
           document.createElement("br")
         );
-        if (i == this.time - 1) {
+        if (i == this.period - 1) {
           rest_dataBase.append(
-            (this.dataBase[i].rest = (
+            (this.dataBase[i].rest = 
               this.getRest() +
-              (this.money / this.time - this.getRest()) * this.time
-            ).toFixed(2)),
+              (this.moneyAmountTemp / this.period - this.getRest()) * this.period
+            ).toFixed(2),
             document.createElement("br")
           );
         } else {
@@ -146,7 +149,7 @@ export default {
           );
         }
         toPay_dataBase.append(
-          (this.toPay -= this.dataBase[i].rest),
+          (this.toPay -= this.dataBase[i].rest).toFixed(2),
           document.createElement("br")
         );
       }
@@ -154,7 +157,6 @@ export default {
   },
 };
 </script>
-
 
 <style>
 @media (width: 1024px) {
@@ -166,6 +168,7 @@ export default {
 #printTable {
   display: grid;
   background: rgb(87, 87, 87);
+  margin-top: 4vh;
 }
 #attributes,
 #dataBaseData {
@@ -173,17 +176,24 @@ export default {
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 }
 #id,
-#time,
+#period,
 #percent,
 #rest,
 #toPay,
 #id_dataBase,
-#time_dataBase,
+#period_dataBase,
 #percent_dataBase,
 #rest_dataBase,
 #toPay_dataBase {
   border-right: 1px solid #000;
   border-bottom: 1px solid #000;
   padding: 8px;
+}
+#id_dataBase,
+#period_dataBase,
+#percent_dataBase,
+#rest_dataBase,
+#toPay_dataBase {
+  border-bottom: 1px solid #000;
 }
 </style>
