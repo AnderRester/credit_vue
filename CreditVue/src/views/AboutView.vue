@@ -5,11 +5,14 @@
 </template>
 
 <style>
-@media (min-width: 1024px) {
+@media (width: 1024px) {
   .about {
-    min-height: 100vh;
+    text-align: center;
     display: flex;
     align-items: center;
   }
+}
+.about {
+  text-align: center;
 }
 </style>

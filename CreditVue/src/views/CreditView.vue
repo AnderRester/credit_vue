@@ -81,16 +81,14 @@ export default {
         return parseInt(this.moneyAmountTemp / this.period);
       }
     },
+    absLocal(number) {
+      return number <= 0 ? -number : number;
+    },
     percentCalculation() {
       return this.moneyAmountTemp = (this.moneyAmount + (this.moneyAmount * (this.percent * 0.01)) * this.period).toFixed(2);
     },
     printCreditTable() {
       this.percentCalculation();
-      //   const id = document.getElementById("id");
-      //   const period = document.getElementById("period");
-      //   const percent = document.getElementById("percent");
-      //   const rest = document.getElementById("rest");
-
       let id_dataBase = document.getElementById("id_dataBase");
       let period_dataBase = document.getElementById("period_dataBase");
       let percent_dataBase = document.getElementById("percent_dataBase");
@@ -102,9 +100,7 @@ export default {
       percent_dataBase.innerHTML = "";
       rest_dataBase.innerHTML = "";
       toPay_dataBase.innerHTML = "";
-      //   this.period = this.periodTemp;
       this.id = 0;
-      //   this.period = 0;
       this.toPay = this.moneyAmountTemp;
       let periodTemp = this.period;
       periodTemp++;
@@ -122,12 +118,11 @@ export default {
         id_dataBase.append(this.dataBase[i].id, document.createElement("br"));
         period_dataBase.append(periodTemp, document.createElement("br"));
         percent_dataBase.append(
-          this.dataBase[i].percent,
-          document.createElement("br")
+          this.dataBase[i].percent, document.createElement("br"),
         );
         if (i == this.period - 1) {
           rest_dataBase.append(
-            (this.dataBase[i].rest =
+            (this.dataBase[i].rest = 
               this.getRest() +
               (this.moneyAmountTemp / this.period - this.getRest()) * this.period
             ).toFixed(2),
@@ -140,7 +135,7 @@ export default {
           );
         }
         toPay_dataBase.append(
-          (this.toPay -= this.dataBase[i].rest).toFixed(2),
+          this.absLocal((this.toPay -= this.dataBase[i].rest).toFixed(2)),
           document.createElement("br")
         );
       }
@@ -159,6 +154,7 @@ export default {
 #creditApp > h1 {
   text-align: center;
   padding: 14px;
+  margin: 6vh 0vh 6vh 0vh ;
 }
 #functional {
   display: grid;
@@ -198,5 +194,7 @@ export default {
 #rest_dataBase,
 #toPay_dataBase {
   border-bottom: 1px solid #000;
+  background: rgb(151, 151, 151);
+  color: #000;
 }
 </style>
